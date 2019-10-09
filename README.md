@@ -2,7 +2,7 @@
 
 This is my Neovim config (init.vim, coc settings…)
 
-It contains all the plugins I personally use, vim plugin manager, and some key mappings
+It contains all the plugins I personally use, vim plugin manager (I use vim-plug), and some key mappings
 
 You can use it for your own development environment but you might wanna have an understanding of what it does before using it
 
