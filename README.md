@@ -15,4 +15,4 @@ You can use it for your own development environment but you might wanna have an 
 
 #### Contributing
 
-Feel free to send a PR if you'd like to make changes, maybe comment on some settings that I skipped, or fix something, whatever you see fit :)
+Feel free to send a PR if you'd like to make changes, maybe comment on some settings that I skipped, add instructions to this README or fix something, whatever you see fit :)
