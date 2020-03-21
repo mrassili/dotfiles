@@ -1,4 +1,25 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "js", "html"],
-  "coc.preferences.formatOnType": true
+  "diagnostic.errorSign": "✘",
+  "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+  "eslint.filetypes": ["javascript", "javascriptreact"],
+  "git.enableGutters": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "markdown",
+    "javascript",
+    "javascriptreact",
+    "json"
+  ],
+  "prettier.onlyUseLocalVersion": true,
+  "prettier.requireConfig": true,
+  "coc.preferences.formatOnType": true,
+  "coc.preferences.formatOnInsertLeave": false,
+  "coc.preferences.formatOnTypeFiletypes": [
+    "css",
+    "markdown",
+    "javascript",
+    "javascriptreact",
+    "json"
+  ]
 }

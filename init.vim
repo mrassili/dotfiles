@@ -1,72 +1,337 @@
-"specify a directory for plugins
-call plug#begin('~/.local/share/nvim/plugged')
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call plug#begin('~/.vim/plugged')
 
-" material color scheme
-Plug 'kaicataldo/material.vim'
+" Theme Ayu
+Plug 'ayu-theme/ayu-vim'
 
-" Surroundings for code
+" Coc
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Devicons
+Plug 'ryanoasis/vim-devicons'
+
+" fzf binary
+Plug 'junegunn/fzf', { 'do': './install --bin' }
+
+" fzf plugin
+Plug 'junegunn/fzf.vim'
+
+" Surroundings
 Plug 'tpope/vim-surround'
 
-" sdrasner night-owl colorscheme"
-Plug 'haishanh/night-owl.vim'
+" Repeat Plugin commands using .
+Plug 'tpope/vim-repeat'
 
-" commment/uncomment code
+" Insert pairs automagically
+Plug 'jiangmiao/auto-pairs'
+
+" Search visual selection using # and *
+Plug 'bronson/vim-visual-star-search'
+
+" Accelerate J/K
+Plug 'rhysd/accelerated-jk'
+
+" Comments
 Plug 'tpope/vim-commentary'
 
-" intellisense engine for neovim
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': './install.sh'}
-
-" git wrapper
-Plug 'tpope/vim-fugitive'
-
-" vue syntax hightlighting
-Plug 'posva/vim-vue'
-
-" TOML syntaxx hightlighting
-Plug 'cespare/vim-toml'
+" JavaScript
+Plug 'pangloss/vim-javascript'
+Plug 'MaxMEllon/vim-jsx-pretty'
 
 call plug#end()
 
-if (has("termguicolors"))
- set termguicolors
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Misc
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable filetype plugins
+filetype plugin on
+
+" Set to auto read when a file is changed from the outside
+set autoread
+au FocusGained,BufEnter * checktime
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let mapleader = "\<Space>"
+
+" Highlight current line
+set cursorline
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases 
+set smartcase
+" Show matching brackets when text indicator is over them
+set showmatch
+
+" Enable syntax highlighting
+syntax enable
+
+" Turn backup off, since most stuff is in SVN, git etc. anyway...
+set nobackup
+set nowb
+set noswapfile
+
+" Use spaces instead of tabs
+set expandtab
+
+" Hybrid line numbers in normal mode
+" Absolute line numbers in insert mode & when buffer loses focus
+set number relativenumber
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set number
+augroup END
+
+" Split to right & bottom
+set splitbelow
+set splitright
+
+" Syntax highlighting
+syntax on
+
+" Enable true colors 
+set termguicolors
+
+" Theme options
+let ayucolor="dark"
+
+" Colorscheme
+colorscheme ayu
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Always show the signcolumn & account for 2 signs
+set signcolumn=yes:2
+
+" Prompt linting
+set updatetime=300
+
+" Open diff in V split
+set diffopt+=vertical
+
+" Always show one line above/below the cursor
+set scrolloff=1
+
+" TODO
+set wildmenu
+
+" Persist undo history
+set undofile
+
+" Don't treat certain chars as part of word
+set iskeyword-=_
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helpers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Get current mode
+let g:currentmode={
+      \'n' : 'Normal ',
+      \'no' : 'N·Operator Pending ',
+      \'v' : 'Visual ',
+      \'V' : 'V·Line ',
+      \'^V' : 'V·Block ',
+      \'s' : 'Select ',
+      \'S': 'S·Line ',
+      \'^S' : 'S·Block ',
+      \'i' : 'Insert ',
+      \'R' : 'Replace ',
+      \'Rv' : 'V·Replace ',
+      \'c' : 'Command ',
+      \'cv' : 'Vim Ex ',
+      \'ce' : 'Ex ',
+      \'r' : 'Prompt ',
+      \'rm' : 'More ',
+      \'r?' : 'Confirm ',
+      \'!' : 'Shell ',
+      \'t' : 'Terminal '
+      \}
+
+function! ModeCurrent() abort
+    let l:modecurrent = mode()
+    let l:modelist = toupper(get(g:currentmode, l:modecurrent, 'V·Block '))
+    let l:current_status_mode = l:modelist
+    return l:current_status_mode
+endfunction
+
+" Check modified status
+function! CheckMod(modi)
+  if a:modi == 1
+    hi Modi guifg=#efefef guibg=#212333 gui=bold
+    hi Filename guifg=#efefef guibg=#212333
+    return expand('%:t').'*'
+  else
+    hi Modi guifg=#929dcb guibg=#212333
+    hi Filename guifg=#929dcb guibg=#212333
+    return expand('%:t')
+  endif
+endfunction
+
+"""""""""""""""""""""""""""""" 
+" CI Status (see https://medium.com/subvisual/jobs-and-timers-in-neovim-how-to-watch-your-builds-fail-f18931f2ffb6) {{{{{
+"""""""""""""""""""""""""""""" 
+function! OnCiStatus(job_id, data, event) dict
+  if a:event == "stdout" && a:data[0] != ''
+    let g:ci_status = ParseCiStatus(a:data[0])
+    call timer_start(30000, 'CiStatus')
+  endif
+endfunction
+
+function! CiStatus(timer_id)
+  let l:callbacks = {
+  \ 'on_stdout': function('OnCiStatus'),
+  \ }
+  call jobstart('hub ci-status', l:callbacks)
+endfunction
+
+let s:in_git = system("git rev-parse — git-dir 2> /dev/null")
+if s:in_git == 0
+  call CiStatus(0)
 endif
 
-syntax on
-let g:material_terminal_italics = 1
-let g:material_theme_style = 'ocean'
-colorscheme material
-set encoding=UTF-8
-set backspace=indent,eol,start
-set cursorline " Highlight current line
-set expandtab " Expand tabs to spaces
-set hlsearch " Highlight searches
-set ignorecase " Ignore case of searches
-set incsearch " Highlight dynamically as pattern is typed
-set nu " Enable line numbers
-set nowrap "do not wrap lines
-set splitright "open split panes to the right
-" map mode switch to jk 
-inoremap jk <esc>
-set tabstop=2
-set shiftwidth=2
-set smarttab
-inoremap <S-Tab> <C-d>
+function! ParseCiStatus(out)
+  let l:states = {
+  \ 'success': "ci passed",
+  \ 'failure': "ci failed",
+  \ 'neutral': "ci yet to run",
+  \ 'error': "ci errored",
+  \ 'cancelled': "ci cancelled",
+  \ 'action_required': "ci requires action",
+  \ 'pending': "ci running",
+  \ 'timed_out': "ci timed out",
+  \ 'no status': "no ci",
+  \ }
+  return l:states[a:out] . ', '
+endfunction
 
+"""""""""""""""""""""""""""""" 
+" Custom statusline {{{{{
+"""""""""""""""""""""""""""""" 
 
-" leader key
-let mapleader = ","
+" Statusline colors
+highlight Base guibg=#212333 guifg=#212333
+highlight Mode guibg=#82aaff guifg=#181824 gui=bold
+highlight Git guibg=#292d3e guifg=#929dcb
+highlight Ci guibg=green guifg=white
 
-" move lines up and down (fix)
-" nnoremap <A-j> :m .+1<CR>==
-" nnoremap <A-<Up>> :m .-2<CR>==
-" inoremap <A-<Down>> <Esc>:m .+1<CR>==gi
-" inoremap <A-<Up>> <Esc>:m .-2<CR>==gi
-" vnoremap <A-<Down>> :m '>+1<CR>gv=gv
-" vnoremap <A-<Up>> :m '<-2<CR>gv=gv
+" Active statusline (see: https://irrellia.github.io/blogs/vim-statusline/)
+function! ActiveLine()
+  let statusline = ""
+  let statusline .= "%#Base#"
+  " Current mode
+  let statusline .= "%#Mode# %{ModeCurrent()}"
+  " Current git branch
+  let statusline .= "%#Git# %{get(g:, 'coc_git_status', '')} %)"
+  " Full path of the file
+  let statusline .= "%#Filename# %F "
+  " Make the colour highlight normal
+  let statusline .= "%#Base#"
+  let statusline .= "%="
+  " Current modified status and filename
+  let statusline .= "%#Modi# %{CheckMod(&modified)} "
+  " CI status
+  " TODO change color based on status
+  let statusline .= "%#Ci# %{get(g:, 'ci_status')} %)"
 
-" add branch to statusline
-set statusline+=%{FugitiveStatusline()}
-set statusline+=%F
+  return statusline
+endfunction
 
-" for coc-prettier to work
+" Inactive statusline
+function! InactiveLine()
+  " Set empty statusline and colors
+  let statusline = ""
+  let statusline .= "%#Base#"
+
+  " Full path of the file
+  let statusline .= "%#LineCol# %F "
+
+  return statusline
+endfunction
+
+"""""""""""""""""""""""""""""" 
+" }}}}} Custom statusline
+"""""""""""""""""""""""""""""" 
+
+" Change statusline automatically
+augroup Statusline
+  autocmd!
+  autocmd WinEnter,BufEnter * setlocal statusline=%!ActiveLine()
+  autocmd WinLeave,BufLeave * setlocal statusline=%!InactiveLine()
+augroup END
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Coc settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <silent> gd <Plug>(coc-definition)
+
+" Range format
+" vmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
+
+" Prettier
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO Move a line of text using ALT+[jk] or Command+[jk] on mac
+
+" Fast saving
+nnoremap <leader>w :w!<cr>
+
+" Fast quitting
+nnoremap <leader>q :q<cr>
+
+" Exit insert mode
+inoremap jk <Esc>
+
+" Smart way to move between windows
+noremap <C-j> <C-W>j
+noremap <C-k> <C-W>k
+noremap <C-h> <C-W>h
+noremap <C-l> <C-W>l
+
+" Manipulate tabs
+map <Leader>tn :tabnew<cr>
+map <Leader>tc :tabclose<cr>
+
+" Fast file search
+nnoremap <C-p> :Files<CR>
+
+" Clear search highlighting
+" TODO change mapping
+" nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+
+" Copy & paste to clipboard
+vnoremap <Leader>y "+y
+vnoremap <Leader>d "+d
+nnoremap <Leader>p "+p
+nnoremap <Leader>P "+P
+vnoremap <Leader>p "+p
+vnoremap <Leader>P "+P
+
+" Show diff at current position
+nmap gs <Plug>(coc-git-chunkinfo)
+" Navigate chunks
+nmap [g <Plug>(coc-git-prevchunk)
+nmap ]g <Plug>(coc-git-nextchunk)
+" Undo current chunk
+nmap <silent> gu :<C-u>CocCommand git.chunkUndo<CR>
+
+" Fast J/K
+nmap j <Plug>(accelerated_jk_gj)
+nmap k <Plug>(accelerated_jk_gk)
+
+" 0 is easier, ^ is more useful
+nnoremap 0 ^
+nnoremap ^ 0
