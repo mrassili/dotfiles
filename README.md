@@ -12,6 +12,7 @@ You can use it for your own development environment but you might wanna have an 
 - https://github.com/paulirish/dotfiles/blob/master/.vimrc
 - https://github.com/glnds/dotfiles/blob/master/.vimrc
 - https://vim.fandom.com/wiki/Script:Best_plugins_selected_by_the_IRC_community
+- https://freshman.tech/vim-javascript/
 
 #### Contributing
 
