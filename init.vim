@@ -36,6 +36,9 @@ Plug 'rhysd/accelerated-jk'
 " Comments
 Plug 'tpope/vim-commentary'
 
+" Navigation b/w tmux panes & vim splits
+Plug 'christoomey/vim-tmux-navigator'
+
 " JavaScript
 Plug 'pangloss/vim-javascript'
 Plug 'MaxMEllon/vim-jsx-pretty'
@@ -269,6 +272,7 @@ augroup END
 " => Coc settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gr <Plug>(coc-references)
 
 " Range format
 " vmap <leader>f  <Plug>(coc-format-selected)
