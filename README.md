@@ -1,8 +1,8 @@
-# nvim-config
+# Dotfiles
 
 ## What is it?
 
-This is my Neovim config (init.vim, coc settings…)
+This is my dotfiles including Neovim, tmux, CoC.
 
 It contains all the plugins I personally use, vim plugin manager (I use vim-plug), and some key mappings
 
