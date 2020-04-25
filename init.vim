@@ -39,6 +39,12 @@ Plug 'tpope/vim-commentary'
 " Navigation b/w tmux panes & vim splits
 Plug 'christoomey/vim-tmux-navigator'
 
+" Git wrapper for neovim
+Plug 'tpope/vim-fugitive'
+
+" Github extension
+Plug 'tpope/vim-rhubarb'
+
 " JavaScript
 Plug 'pangloss/vim-javascript'
 Plug 'MaxMEllon/vim-jsx-pretty'
@@ -81,6 +87,10 @@ set noswapfile
 " Use spaces instead of tabs
 set expandtab
 
+" 2 chars-wide tabs
+set shiftwidth=2
+let &softtabstop = &shiftwidth
+    
 " Hybrid line numbers in normal mode
 " Absolute line numbers in insert mode & when buffer loses focus
 set number relativenumber
@@ -102,6 +112,7 @@ set termguicolors
 
 " Theme options
 let ayucolor="dark"
+
 
 " Colorscheme
 colorscheme ayu
@@ -129,6 +140,12 @@ set undofile
 
 " Don't treat certain chars as part of word
 set iskeyword-=_
+
+" Possibility to have more than one unsaved buffers
+set hidden
+
+" Auto indent new lines
+set autoindent
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helpers
@@ -299,12 +316,6 @@ nnoremap <leader>q :q<cr>
 " Exit insert mode
 inoremap jk <Esc>
 
-" Smart way to move between windows
-noremap <C-j> <C-W>j
-noremap <C-k> <C-W>k
-noremap <C-h> <C-W>h
-noremap <C-l> <C-W>l
-
 " Manipulate tabs
 map <Leader>tn :tabnew<cr>
 map <Leader>tc :tabclose<cr>
@@ -339,3 +350,14 @@ nmap k <Plug>(accelerated_jk_gk)
 " 0 is easier, ^ is more useful
 nnoremap 0 ^
 nnoremap ^ 0
+
+" Manage buffers (try different approaches)
+nnoremap <leader>b :buffer 
+nnoremap gb :ls<CR>:b<Space>
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-rhubarb
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:github_enterprise_urls = []
