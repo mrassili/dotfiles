@@ -39,6 +39,9 @@ Plug 'tpope/vim-commentary'
 " Navigation b/w tmux panes & vim splits
 Plug 'christoomey/vim-tmux-navigator'
 
+" Markdown
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+
 " Git wrapper for neovim
 Plug 'tpope/vim-fugitive'
 
@@ -112,7 +115,6 @@ set termguicolors
 
 " Theme options
 let ayucolor="dark"
-
 
 " Colorscheme
 colorscheme ayu
