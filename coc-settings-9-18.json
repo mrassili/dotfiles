@@ -1,0 +1,20 @@
+{
+  "diagnostic.errorSign": "✘",
+  "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+  "eslint.filetypes": ["javascript", "javascriptreact"],
+  "git.enableGutters": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "javascript",
+    "javascriptreact",
+    "json"
+  ],
+  "coc.preferences.formatOnTypeFiletypes": [
+    "css",
+    "markdown",
+    "javascript",
+    "javascriptreact",
+    "json"
+  ]
+}
